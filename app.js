@@ -12,13 +12,15 @@ app.set("view engine","ejs")
 app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection',function(socket){
+    const username = `User${socket.id.slice(0, 6)}`;
     socket.on('send-location',function(data){
-        io.emit('receive-location',{id:socket.id,...data})
+        io.emit('receive-location',{id:socket.id,username,...data})
     })
     socket.on('disconnect',function(){
         io.emit('user-disconnected',socket.id);
     })
-    console.log('connected')
+    
+    console.log(`User connected: ${username}`);
 })
 app.get('/',function(req,res){
     res.render('index')
